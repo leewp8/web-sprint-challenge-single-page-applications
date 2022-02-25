@@ -6,16 +6,17 @@ const App = () => {
   return (
     <div className='App'>
       <header>
-        <Link id="order-pizza" to="/">Home</Link>
-        <Link id="pizza-form" to="/pizza">Order Pizza</Link>
+        <Link to="/">Home</Link>
+        
       </header>
       <Switch>
         <Route exact path="/">
           <h1>BloomTech Pizza Shop</h1>
           <p>Programmable Pizza made by you ;)</p>
+          <Link id="order-pizza" to="/pizza">Order Pizza</Link>
         </Route>
         <Route exact path="/pizza">
-          <OrderForm id="pizza-form"/>
+          <OrderForm/>
           
         </Route>
       </Switch>
