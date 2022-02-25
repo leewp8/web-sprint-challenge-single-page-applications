@@ -22,7 +22,7 @@ const App = () => {
       <Switch>
         <Route exact path="/">
           <h1>BloomTech Pizza Shop</h1>
-          <p>Programmable Pizza made by you ;)</p>
+          <h3>Programmable Pizza made by you ;)</h3>
           <Link id="order-pizza" to="/pizza">Order Pizza</Link>
         </Route>
         <Route exact path="/pizza">
