@@ -1,4 +1,6 @@
 import React, {useState, useEffect} from 'react'
+import * as yup from 'yup'
+
 
 const initialForm = {
     name: '',
@@ -7,33 +9,59 @@ const initialForm = {
     sausage: false,
     mushroom: false,
     onion: false,
-    special: '',
-    accepted: false
+    special: ''
 }
 
 const OrderForm = (props) => {
 
-    // console.log(props)
+    const formSchema = yup.object().shape({
+        name: yup.string().min(2, "name must be at least 2 characters"),
+        size: yup.string(),
+        pepperoni: yup.bool(),
+        sausage: yup.bool(),
+        mushroom: yup.bool(),
+        onion: yup.bool(),
+        special: yup.string()
+    })
 
-    const {orderSubmit} = props
+    const [error, setError] = useState({
+        name: ''
+    })
+
+    const [disabled, setDisabled] = useState(true)
 
     const [form, setForm] = useState(initialForm)
+    const {orderSubmit} = props
+
+    const formValidate = (e) => {
+        yup.reach(formSchema, e.target.name)
+            .validate(
+                e.target.type === 'checkbox' ? e.target.checked : e.target.value
+            )
+            .then(() => {
+                setError({...error, [e.target.name]: ''})
+            })   
+            .catch((error) => {
+                setError({...error, [e.target.name]: error.errors[0]})
+            })  
+    }
 
     const formChange = (e) => {
-        // console.log(e.target.name, e.target.value, e.target.checked)
+        formValidate(e)
         const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value
         setForm({...form, [e.target.name]:value})
     }
 
     const submitForm = (e) => {
         e.preventDefault()
-        // console.log(form)
         orderSubmit(form)
         setForm(initialForm)
     }
 
     useEffect(() => {
-        // console.log(form)
+        formSchema.isValid(form).then((valid) =>{
+            setDisabled(!valid)
+        })
     }, [form] )
 
     return(<>
@@ -69,12 +97,9 @@ const OrderForm = (props) => {
                 Special Instructions:
                 <input onChange={formChange} type='text' name='special' id='special-text' value={form.special} />
             </label>
-            {/* <label>
-                Ready to bake!
-                <input onChange={formChange} type='checkbox' name='accepted' value={form.accepted} />
-            </label> */}
-            <button type='submit' id='order-button'>Add to Order</button>
+            <button type='submit' id='order-button' disabled={disabled}>Add to Order</button>
         </form>
+        <p>{error.name}</p>
         </>)
 
 }
