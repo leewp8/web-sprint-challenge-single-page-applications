@@ -1,13 +1,23 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import {Switch, Route, Link} from 'react-router-dom'
 import OrderForm from "./Components/OrderForm";
 
 const App = () => {
+
+  const [orders, setOrders] = useState([])
+
+  const orderSubmit = (newOrder) => {
+    setOrders([...orders, newOrder])
+  }
+
+  useEffect(() => {
+    console.log(orders)
+  }, [orders])
+
   return (
     <div className='App'>
       <header>
         <Link to="/">Home</Link>
-        
       </header>
       <Switch>
         <Route exact path="/">
@@ -16,8 +26,7 @@ const App = () => {
           <Link id="order-pizza" to="/pizza">Order Pizza</Link>
         </Route>
         <Route exact path="/pizza">
-          <OrderForm/>
-          
+          <OrderForm orderSubmit={orderSubmit}/>
         </Route>
       </Switch>
       
